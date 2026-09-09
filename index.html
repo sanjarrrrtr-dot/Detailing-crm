@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM для детейлинг центра | Управление студией</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: #2c2c2c;
+            background: #fafafa;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        header .content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.25em;
+            opacity: 0.95;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* СЕКЦИИ */
+        section {
+            padding: 90px 20px;
+        }
+
+        section.light {
+            background: #ffffff;
+        }
+
+        section.gradient-light {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        section.gradient-warm {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        section.gradient-cool {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8em;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: #2c2c2c;
+            font-weight: 600;
+        }
+
+        /* ПРОБЛЕМЫ */
+        .problem-block {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(255, 170, 170, 0.08) 100%);
+            border-left: 4px solid #ff6b6b;
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            font-size: 1.05em;
+            line-height: 1.8;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .problem-block:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.15);
+        }
+
+        .problem-block strong {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        /* РЕШЕНИЕ */
+        .solution-block {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(139, 195, 74, 0.08) 100%);
+            border-left: 4px solid #4caf50;
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 12px;
+            font-size: 1.05em;
+            line-height: 1.8;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .solution-block:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.15);
+        }
+
+        .solution-block strong {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        /* GRID ФУНКЦИЙ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4em;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* WORKFLOW */
+        .workflow {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            margin: 50px 0;
+            gap: 10px;
+        }
+
+        .workflow-step {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .workflow-step:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .workflow-step.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: 300;
+        }
+
+        /* СКРИНШОТЫ */
+        .screenshot-block {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .screenshot-block p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            color: #2c2c2c;
+            font-weight: 500;
+        }
+
+        .screenshot-block img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .screenshot-block img:hover {
+            transform: scale(1.02);
+        }
+
+        .screenshot-label {
+            margin-top: 18px;
+            font-size: 0.95em;
+            color: #666;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        /* РЕЗУЛЬТАТЫ */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .result-item {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            border-top: 4px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .result-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+            border-top: 4px solid #764ba2;
+        }
+
+        .result-item .icon {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+        }
+
+        .result-item h3 {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+        }
+
+        .result-item p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-section .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section h2 {
+            color: white;
+            margin-bottom: 25px;
+            background: none;
+            -webkit-text-fill-color: unset;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 16px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.05em;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 300;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            font-size: 0.9em;
+            font-weight: 300;
+        }
+
+        footer p {
+            margin: 8px 0;
+            opacity: 0.9;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2em;
+            }
+
+            header p {
+                font-size: 1.05em;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            section {
+                padding: 50px 20px;
+            }
+
+            .workflow {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .feature-card {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="content">
+        <h1>CRM для детейлинг центра</h1>
+        <p>Все заявки, клиенты и машины в одном месте. Контролируйте работу, увеличивайте повторные визиты и растите прибыль</p>
+    </div>
+</header>
+
+<!-- ПРОБЛЕМА -->
+<section class="light">
+    <div class="container">
+        <h2>Где теряются деньги</h2>
+
+        <div class="problem-block">
+            <strong>Информация разлетается по чатам и таблицам:</strong> Заявки приходят из Instagram, WhatsApp, звонков — каждый источник свой. Администратор переносит данные вручную. Где-то номер клиента, где-то согласована цена, в третьем месте только мастер знает статус машины.
+        </div>
+
+        <div class="problem-block">
+            <strong>Руководитель теряет половину дня на вопросы:</strong> «Где эта машина?», «Когда она готова?», «Какой статус?». Нет единого места, где видна вся картина прямо сейчас. Чаты вместо контроля.
+        </div>
+
+        <div class="problem-block">
+            <strong>Клиент не в курсе своего заказа:</strong> Он не знает статус. Сметы отправляют по-разному. Повторные визиты зависят от памяти мастера, а не от системы. Опыт плохой.
+        </div>
+
+        <div class="problem-block">
+            <strong>Аналитика — это фантастика:</strong> Непонятно, какой источник приводит целевых клиентов. На каком этапе теряются заявки? Допработы согласовываются долго. Задолженость хранится в голове.
+        </div>
+    </div>
+</section>
+
+<!-- РЕШЕНИЕ -->
+<section class="gradient-cool">
+    <div class="container">
+        <h2>Как это работает</h2>
+
+        <p style="text-align: center; font-size: 1.1em; margin-bottom: 50px; color: #2c2c2c; font-weight: 400;">
+            Собрали систему под весь путь автомобиля: от первого звонка до выдачи и повторного визита
+        </p>
+
+        <div class="workflow">
+            <div class="workflow-step">Заявка</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step">Смета</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step">Запись</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step">Приёмка</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step highlight">Работа</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step">Контроль</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step">Оплата</div>
+            <div class="arrow">→</div>
+            <div class="workflow-step">Выдача</div>
+        </div>
+
+        <div class="solution-block">
+            <strong>Результат:</strong> Вся информация о клиенте, его автомобилях и истории находится в одном месте. Сотрудники видят ровно то, что им нужно. Руководитель контролирует всё с одного экрана.
+        </div>
+    </div>
+</section>
+
+<!-- ФУНКЦИИ -->
+<section class="light">
+    <div class="container">
+        <h2>Что есть в системе</h2>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">📊</div>
+                <h3>Операционная сводка</h3>
+                <p>На главном экране видно всё сразу: открытые заявки, машины в производстве, ближайшие записи, текущая задолженость. Руководителю не нужно писать каждому — вся картина перед ним.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">📋</div>
+                <h3>Доска заявок</h3>
+                <p>Каждая новая заявка видна в одном месте. Текущий статус, источник, следующая задача, ответственный. Со временем видно, где теряются продажи и какие источники целевые.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">👥</div>
+                <h3>База клиентов</h3>
+                <p>История всех визитов, автомобили, текущие задачи. Когда клиент вернулся, сотрудник знает, что с машиной делали. Система сама подсказывает, кому пора вернуться.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">💰</div>
+                <h3>Сметы и расчёты</h3>
+                <p>Сметы собираются за минуты. Сразу видны цены, скидки, длительность, предоплата и остаток. Можно отправить клиенту ссылкой — он открывает с телефона и принимает решение.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">📅</div>
+                <h3>Календарь загрузки</h3>
+                <p>Администратор видит, какой пост займёт машина, во сколько приедет, какая услуга. Система показывает конфликты времени. Никаких звонков мастерам и ручного пересчёта.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">🏗️</div>
+                <h3>Доска производства</h3>
+                <p>Машина двигается по статусам: приёмка, очередь, работа, контроль, готовность. На одном экране видны все автомобили. Руководитель быстро замечает, где работа встала.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">✅</div>
+                <h3>Контроль качества</h3>
+                <p>Перед выдачей контролёр идёт по чек-листу, смотрит фотографии, оставляет замечания. Машина не выдаётся, пока не всё исправлено. История сохраняется навсегда.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon">📱</div>
+                <h3>Страница для клиента</h3>
+                <p>Клиент видит статус своего заказа в реальном времени. Смету, сроки, фотографии до и после. Всё на его телефоне, никаких звонков: «А когда готово?»</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- СКРИНШОТЫ -->
+<section class="gradient-warm">
+    <div class="container">
+        <h2>В работе это выглядит так</h2>
+
+        <div class="screenshot-block">
+            <p><strong>Главная — вся операционная сводка за раз</strong></p>
+            <img src="D7854BDD-A515-4059-A104-761C757E4C69.png" alt="Доска заявок CRM Lumen-Detailing" width="1668" height="943">
+            <p class="screenshot-label">На одном экране видны все открытые заявки, машины в работе, ближайшие записи и задолженость</p>
+        </div>
+
+        <div class="screenshot-block">
+            <p><strong>Доска заявок — от звонка до решения</strong></p>
+            <img src="https://github.com/user-attachments/assets/10f61fe6-a985-4202-9751-9012ae865c4c" alt="Доска заявок" width="1661" height="947">
+            <p class="screenshot-label">Видны все активные заявки, их статусы, источники и ответственные сотрудники</p>
+        </div>
+
+        <div class="screenshot-block">
+            <p><strong>Доска производства — управление постами</strong></p>
+            <img src="https://github.com/user-attachments/assets/3ae2cf95-27fc-40ca-8b59-44892654aed0" alt="Доска производства" width="755" height="430">
+            <p class="screenshot-label">Видны все машины на разных этапах. Руководитель видит, где стоит работа</p>
+        </div>
+
+        <div class="screenshot-block">
+            <p><strong>Контроль качества — перед выдачей</strong></p>
+            <img src="https://github.com/user-attachments/assets/9c150881-10c1-4689-9ce8-b5f073d13129" alt="Контроль качества" width="759" height="426">
+            <p class="screenshot-label">Контролёр видит все детали заказа, чек-лист и может оставить замечания</p>
+        </div>
+
+        <div class="screenshot-block">
+            <p><strong>Мобильная версия для клиента</strong></p>
+            <img src="https://github.com/user-attachments/assets/7accacaf-cb75-4065-adf2-1d979173189a" alt="Мобильная версия" width="750" height="424">
+            <p class="screenshot-label">Клиент видит статус своего заказа прямо в смартфоне</p>
+        </div>
+
+        <div class="screenshot-block">
+            <p><strong>Интеграция с платежами</strong></p>
+            <img src="https://github.com/user-attachments/assets/d8dcc742-355b-43e5-8ae7-59b7c257884e" alt="Платежи" width="757" height="438">
+            <p class="screenshot-label">Автоматическая обработка оплат и расчётов</p>
+        </div>
+
+        <div class="screenshot-block">
+            <p><strong>Аналитика и отчёты</strong></p>
+            <img src="https://github.com/user-attachments/assets/88c87d20-d4a6-4c36-b586-dc81518d0f4a" alt="Аналитика" width="753" height="430">
+            <p class="screenshot-label">Видны все метрики: источники, конверсия, выручка и прибыль</p>
+        </div>
+    </div>
+</section>
+
+<!-- РЕЗУЛЬТАТЫ -->
+<section class="light">
+    <div class="container">
+        <h2>Что получает студия</h2>
+
+        <div class="results-grid">
+            <div class="result-item">
+                <div class="icon">🎯</div>
+                <h3>Контроль вместо хаоса</h3>
+                <p>Одно место, где вся информация. Администратор обрабатывает заявки, мастера видят свои машины, руководитель следит за загрузкой и деньгами.</p>
+            </div>
+
+            <div class="result-item">
+                <div class="icon">⏱️</div>
+                <h3>Меньше времени на переписки</h3>
+                <p>Информация не разлетается по чатам. Не нужно переспрашивать статус, пересчитывать время, искать данные в разных местах.</p>
+            </div>
+
+            <div class="result-item">
+                <div class="icon">💰</div>
+                <h3>Больше повторных визитов</h3>
+                <p>База клиентов работает на рост. Система подсказывает, кому пора вернуться. Детейлинг нужно обновлять — система об этом не забывает.</p>
+            </div>
+
+            <div class="result-item">
+                <div class="icon">📈</div>
+                <h3>Видна аналитика</h3>
+                <p>Какой источник приводит целевых клиентов? На каком этапе теряются заявки? Где отказываются? Данные есть, решения приходят быстрее.</p>
+            </div>
+
+            <div class="result-item">
+                <div class="icon">✨</div>
+                <h3>Лучший опыт клиента</h3>
+                <p>Клиент видит статус. Смету видит с телефона и принимает решение без переговоров. Фотографии до и после отправляются автоматически.</p>
+            </div>
+
+            <div class="result-item">
+                <div class="icon">🚀</div>
+                <h3>Готовность к росту</h3>
+                <p>Когда студия растёт, система не ломается. Она масштабируется вместе с бизнесом. Инструменты уже есть — добавляешь людей.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="content">
+            <h2>Готовы организовать работу студии?</h2>
+            <p style="font-size: 1.1em; margin-bottom: 40px;">CRM собирается под вашу студию. Все процессы настраиваются под вашу реальную работу</p>
+            <button class="cta-button" onclick="alert('Форма для связи — добавь свой контакт')">Обсудить проект</button>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2024 CRM для детейлинг центра</p>
+    <p>Контакты: [добавь свой email или телефон]</p>
+</footer>
+
+</body>
+</html>
