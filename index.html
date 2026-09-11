@@ -42,4 +42,32 @@ function leadModal(){openModal(`<div class="modal-head"><h2>Новая заяв�
 function quoteModal(){openModal(`<div class="modal-head"><h2>Новая смета</h2><button class="close">×</button></div><div class="form-grid"><div class="field"><label>Клиент</label><input placeholder="Имя клиента"/></div><div class="field"><label>Автомобиль</label><input placeholder="Марка и модель"/></div><div class="field full"><label>Комментарий</label><textarea placeholder="Особенности работ, сроки..."></textarea></div></div><div class="quote-items"><div class="quote-item"><div><b>Керамическое покрытие</b><small>Срок: 2 дня</small></div><input value="390000"/><input value="1"/><button class="remove">×</button></div><div class="quote-item"><div><b>Двухфазная мойка</b><small>Подготовка кузова</small></div><input value="25000"/><input value="1"/><button class="remove">×</button></div></div><button class="secondary" style="margin-top:12px" onclick="toast('Услуга добавлена')">+ Добавить услугу</button><div class="modal-actions"><button class="secondary close">Сохранить черновик</button><button class="primary" id="saveQuote">Создать и отправить</button></div>`);$$('.close').forEach(b=>b.onclick=()=>$('#modalWrap').classList.remove('show'));$('#saveQuote').onclick=()=>{$('#modalWrap').classList.remove('show');toast('Смета создана. Ссылка скопирована');go('quotes')}}
 $('#quickLead').onclick=$('#newLeadBtn').onclick=leadModal;$('#quickQuote').onclick=$('#newQuoteBtn').onclick=quoteModal;$('#newClientBtn').onclick=()=>{openModal(`<div class="modal-head"><h2>Новый клиент</h2><button class="close">×</button></div><div class="form-grid"><div class="field"><label>Имя</label><input placeholder="Имя и фамилия"/></div><div class="field"><label>Телефон</label><input placeholder="+7 ..."/></div><div class="field"><label>Марка автомобиля</label><input placeholder="Mercedes-Benz"/></div><div class="field"><label>Госномер</label><input placeholder="123 ABC 01"/></div></div><div class="modal-actions"><button class="secondary close">Отмена</button><button class="primary" onclick="$('#modalWrap').classList.remove('show');toast('Клиент добавлен')">Добавить клиента</button></div>`);$$('.close').forEach(b=>b.onclick=()=>$('#modalWrap').classList.remove('show'))};$('#newBookingBtn').onclick=()=>toast('Окно новой записи готово к заполнению');$('#newWorkBtn').onclick=()=>toast('Автомобиль добавлен в очередь');$('#approveQuality').onclick=()=>{toast('Проверка завершена — заказ готов к выдаче');$('.quality .badge.red').textContent='Проверено';$('.quality .badge.red').className='badge green'};$('#uploadPhoto').onclick=()=>toast('Выберите фото на устройстве');$('#copyPortal').onclick=()=>{navigator.clipboard?.writeText('https://detailingos.local/client/1048');toast('Ссылка на портал скопирована')};$('#exportBtn').onclick=()=>toast('Отчёт подготовлен для скачивания');$$('.pay-btn').forEach(b=>b.onclick=()=>toast('Платёж зафиксирован'));$('#newPaymentBtn').onclick=()=>toast('Форма фиксации оплаты открыта');
 renderLeads();renderClients();renderProduction();renderQuotes();
-</script></body></html>
+</script>
+<script>
+(function(){
+  const savedLeads=localStorage.getItem('detailing_leads');
+  const savedClients=localStorage.getItem('detailing_clients');
+  try{ if(savedLeads) leads.splice(0,leads.length,...JSON.parse(savedLeads)); }catch(e){}
+  try{ if(savedClients) clients.splice(0,clients.length,...JSON.parse(savedClients)); }catch(e){}
+  const save=()=>{localStorage.setItem('detailing_leads',JSON.stringify(leads));localStorage.setItem('detailing_clients',JSON.stringify(clients));};
+  const oldRenderLeads=renderLeads, oldRenderClients=renderClients;
+  window.renderLeads=function(){oldRenderLeads();save()};
+  window.renderClients=function(){oldRenderClients();save()};
+  save();
+  document.addEventListener('click', function(e){
+    const btn=e.target.closest('button'); if(!btn) return;
+    if(btn.classList.contains('filter')){const current=btn.dataset.open==='1';document.querySelectorAll('.filter[data-open="1"]').forEach(x=>{x.dataset.open='0';x.style.outline='';});if(!current){btn.dataset.open='1';btn.style.outline='2px solid #11845b44';toast('Фильтр выбран: '+btn.textContent.replace('⌄','').trim());}return;}
+    if(btn.classList.contains('tab')){btn.parentElement.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');toast('Режим просмотра: '+btn.textContent.trim());return;}
+    if(btn.classList.contains('icon-btn')){toast('Уведомлений нет');return;}
+    if(btn.classList.contains('remove')){btn.closest('.quote-item')?.remove();toast('Услуга удалена');return;}
+  });
+  document.addEventListener('click',function(e){const check=e.target.closest('.check');if(!check||check.closest('#portal'))return;check.classList.toggle('done');check.textContent=check.classList.contains('done')?'✓':'';toast(check.classList.contains('done')?'Пункт чек-листа выполнен':'Пункт возвращён в работу');});
+  $('#modalWrap').addEventListener('click',e=>{if(e.target.id==='modalWrap')$('#modalWrap').classList.remove('show')});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalWrap').classList.remove('show');if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.querySelector('.search input')?.focus();}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='n'){e.preventDefault();leadModal();}});
+  function wireBoard(){document.querySelectorAll('.work-card').forEach(card=>{card.draggable=true;card.ondragstart=e=>{e.dataTransfer.setData('text/plain','move');card.classList.add('dragging')};card.ondragend=()=>card.classList.remove('dragging')});document.querySelectorAll('.production-col').forEach(col=>{col.ondragover=e=>e.preventDefault();col.ondrop=()=>{const card=document.querySelector('.dragging');if(card){col.appendChild(card);toast('Этап производства изменён');}}});}
+  const originalProduction=renderProduction;window.renderProduction=function(){originalProduction();wireBoard()};
+  const observer=new MutationObserver(()=>{const c=document.querySelector('.nav-count');if(c)c.textContent=leads.length>44?leads.length:'44'});observer.observe(document.body,{childList:true,subtree:true});
+  document.querySelectorAll('.secondary').forEach(btn=>{if(!btn.onclick&&!btn.classList.contains('close'))btn.addEventListener('click',()=>toast(btn.textContent.trim()+' — действие открыто'));});
+})();
+</script>
+</body></html>
