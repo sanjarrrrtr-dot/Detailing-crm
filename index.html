@@ -66,7 +66,6 @@ renderLeads();renderClients();renderProduction();renderQuotes();
   document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalWrap').classList.remove('show');if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.querySelector('.search input')?.focus();}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='n'){e.preventDefault();leadModal();}});
   function wireBoard(){document.querySelectorAll('.work-card').forEach(card=>{card.draggable=true;card.ondragstart=e=>{e.dataTransfer.setData('text/plain','move');card.classList.add('dragging')};card.ondragend=()=>card.classList.remove('dragging')});document.querySelectorAll('.production-col').forEach(col=>{col.ondragover=e=>e.preventDefault();col.ondrop=()=>{const card=document.querySelector('.dragging');if(card){col.appendChild(card);toast('Этап производства изменён');}}});}
   const originalProduction=renderProduction;window.renderProduction=function(){originalProduction();wireBoard()};
-  const observer=new MutationObserver(()=>{const c=document.querySelector('.nav-count');if(c)c.textContent=leads.length>44?leads.length:'44'});observer.observe(document.body,{childList:true,subtree:true});
   document.querySelectorAll('.secondary').forEach(btn=>{if(!btn.onclick&&!btn.classList.contains('close'))btn.addEventListener('click',()=>toast(btn.textContent.trim()+' — действие открыто'));});
 })();
 </script>
